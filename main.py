@@ -1,8 +1,10 @@
 import DataLibrary
-from config import DATALIB_API_KEY
+from api_key import DATALIB_API_KEY
 from utils import normalize_json, create_csv
 
 def main():
+    """Get user and survey data from Data Library and create CSV files for each of the datasets."""
+
     # initiate Data Library API instance
     dl = DataLibrary.DataLibraryData(DATALIB_API_KEY)
 
@@ -18,18 +20,21 @@ def main():
     users = dl.get_users()
     # get total number of users with an account on Data Library
     total_users = len(users)
+
     print(f"There are {total_surveys + 1} surveys and {total_users + 1} active users in Data Library")
 
+    # get all information about surveys
     all_surveys_resources = dl.get_all_surveys_information(limit=total_surveys)
-
     all_surveys = [normalize_json(item) for item in all_surveys_resources]
 
+    # save data as csv
     all_data = [all_surveys, users, survey_list]
     all_filenames = ["datalib_all_info", "datalib_users", "survey_list"]
 
     for data, filename in zip(all_data, all_filenames):
         create_csv(data, filename)
     
+    # Success!
     print("\nAll data saved!")
 
 if __name__== "__main__":
