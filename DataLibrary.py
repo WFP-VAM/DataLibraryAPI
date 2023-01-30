@@ -1,7 +1,5 @@
 import requests
 import json
-import pandas as pd 
-
 
 BASE_URL = "https://datalib.vam.wfp.org/api/3/"
 ENDPOINTS = {
