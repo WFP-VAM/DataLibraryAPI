@@ -1,12 +1,12 @@
-import DataLibrary
-from api_key import DATALIB_API_KEY
-from utils import normalize_json, create_csv
+from config import DATALIB_API_KEY
+from datalibrary import datalibrary
+from datalibrary.export_excel import normalize_json, create_csv
 
 def main():
     """Get user and survey data from Data Library and create CSV files for each of the datasets."""
 
     # initiate Data Library API instance
-    dl = DataLibrary.DataLibraryData(DATALIB_API_KEY)
+    dl = datalibrary.DataLibrary(DATALIB_API_KEY)
 
     # call the help function to get basic info about usage
     urls = dl.help()

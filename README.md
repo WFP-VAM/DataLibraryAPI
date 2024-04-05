@@ -18,5 +18,4 @@ For more information on the RAM Data Library API, consult the [documentation](ht
 
 >> **Quick tip**
 >> 
->> If you're stuck, use the help() function in the DataLibraryData class for information about usage
->>
+>> If you're stuck, use the help() function in the DataLibraryData class for information about 

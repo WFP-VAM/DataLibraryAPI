@@ -10,7 +10,7 @@ ENDPOINTS = {
 'all_surveys_code': 'action/package_list'
 }
 
-class DataLibraryData:
+class DataLibrary:
 
     def __init__(self, api_key):
         """Intitialize Data Library class to query API.

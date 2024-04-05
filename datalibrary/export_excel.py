@@ -19,22 +19,25 @@ def create_csv(data, filename = "output"):
     # Get today's date in format YYY_MM_DD
     today = str(date.today()).replace("-", "_")
     # Create file name with today's date and data
-    filename = f"{today}_{filename}.csv"
+    folder = "output"
+    fname = f"{today}_{filename}.csv"
+    path = f"{folder}/{fname}"
+
 
     if type(data[0]) == str:
-        with open(filename, 'w', newline="") as csvfile:
+        with open(path, 'w', newline="") as csvfile:
             writer = csv.writer(csvfile)
             for survey in data:
                 writer.writerow([survey])
     else:
         try: 
-            with open(filename, 'w', newline="", encoding="utf-8") as csvfile:
+            with open(path, 'w', newline="", encoding="utf-8") as csvfile:
                 # get row header
                 header = list(data[0].keys())
                 writer = csv.DictWriter(csvfile, fieldnames = header, extrasaction='ignore')
                 writer.writeheader()
                 writer.writerows(data)
         except FileNotFoundError:
-            print(f"Unable to locate {filename}")
+            print(f"Unable to locate {fname}")
 
-    print(f"{filename} saved in current directory")
+    print(f"{path} saved in {folder}")
