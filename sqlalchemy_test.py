@@ -13,17 +13,13 @@ def test_read_sql():
 
 def test_write_sql():
     # sample data
-    sample_data = {'col1': [1, 2, 3], 'col2': ['a', 'b', 'c']}
+    sample_data = {'col1': [1, 2, 3], 'col2': ['a', 'b', 'c'], 'col3': ['d', 'e', 'f']}
     df = pd.DataFrame(sample_data)
     try:
         sql_df = df.to_sql(name='DL_test', con=engine, if_exists='replace', index=False)
         print("Done")
     except Exception as e:
         print(e)
-
-
-
-
 
 
 if __name__ == "__main__":
@@ -36,7 +32,6 @@ if __name__ == "__main__":
     USERNAME = os.getenv("DB_USERNAME")
     PASSWORD = os.getenv("DB_PASSWORD")
 
-    # conn_str = f'DRIVER={{SQL Server}};SERVER={SERVER};DATABASE={DATABASE};UID={USERNAME};PWD={PASSWORD}'
     conn_str = f'mssql+pyodbc://{USERNAME}:{PASSWORD}@{SERVER}/{DATABASE}?driver=ODBC+Driver+17+for+SQL+Server'
     engine = create_engine(conn_str)
 

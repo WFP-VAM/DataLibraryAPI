@@ -1,41 +1,38 @@
 import os
 import pyodbc
 import pandas as pd
+from sqlalchemy import create_engine 
 from dotenv import load_dotenv
 
-def test_connection():
-    # sample data
-    sample_data = {'col1': [1, 2, 3], 'col2': ['a', 'b', 'c']}
-    df = pd.DataFrame(sample_data)
+#%%
+load_dotenv()  # take environment variables from .env.
+
+SERVER = os.getenv("SERVER")
+DATABASE = os.getenv("DB_NAME")
+USERNAME = os.getenv("DB_USERNAME")
+PASSWORD = os.getenv("DB_PASSWORD")
+
+conn_str = f'mssql+pyodbc://{USERNAME}:{PASSWORD}@{SERVER}/{DATABASE}?driver=ODBC+Driver+17+for+SQL+Server'
+engine = create_engine(conn_str)
+
+#%% 
+def test_read_sql(table_name):
     sql = """
-    SELECT * FROM [dbo].IpcValues
+    SELECT * FROM [dbo].table_name
     """
+    sql_df = pd.read_sql( sql, con=engine) 
+    print(sql_df.head())
+
+def load_table(df, table_name = 'table'):
     try:
-        conn = pyodbc.connect(conn_str)
-        # cursor = conn.cursor()
-        # cursor.execute(sql)
-
-        # cursor.close()
-        # conn.close()
-
-        data = pd.read_sql(sql,conn) 
-        print(data.head())
+        sql_df = df.to_sql(name=table_name, con=engine, if_exists='replace', index=False)
+        print("Done")
     except Exception as e:
         print(e)
 
 
-
+#%%
 if __name__ == "__main__":
 
-
-    load_dotenv()  # take environment variables from .env.
-
-    SERVER = os.getenv("SERVER")
-    DATABASE = os.getenv("DB_NAME")
-    USERNAME = os.getenv("DB_USERNAME")
-    PASSWORD = os.getenv("DB_PASSWORD")
-
-    conn_str = f'DRIVER={{SQL Server}};SERVER={SERVER};DATABASE={DATABASE};UID={USERNAME};PWD={PASSWORD}'
-
-    test_connection()
-
+    # test_read_sql()
+    test_write_sql('DL_Test')

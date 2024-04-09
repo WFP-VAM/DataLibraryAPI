@@ -1,6 +1,9 @@
 from datalibrary.query_api import DataLibrary
+from datalibrary.export_database import load_table
 from datalibrary.export_excel import normalize_json, create_csv
 from dotenv import load_dotenv
+import pandas as pd
+import os
 
 load_dotenv()  # take environment variables from .env.
 
@@ -8,7 +11,7 @@ def main():
     """Get user and survey data from Data Library and create CSV files for each of the datasets."""
 
     # initiate Data Library API instance
-    dl = DataLibrary(DATALIB_API_KEY)
+    dl = DataLibrary(os.getenv("DATALIB_API_KEY"))
 
     # call the help function to get basic info about usage
     urls = dl.help()
@@ -36,6 +39,9 @@ def main():
     for data, filename in zip(all_data, all_filenames):
         create_csv(data, filename)
     
+    # save data to database
+    load_table(pd.DataFrame(all_surveys), 'DL_Surveys')
+
     # Success!
     print("\nAll data saved!")
 
