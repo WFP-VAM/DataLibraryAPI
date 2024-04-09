@@ -1,12 +1,14 @@
-from config import DATALIB_API_KEY
-from datalibrary import datalibrary
+from datalibrary.query_api import DataLibrary
 from datalibrary.export_excel import normalize_json, create_csv
+from dotenv import load_dotenv
+
+load_dotenv()  # take environment variables from .env.
 
 def main():
     """Get user and survey data from Data Library and create CSV files for each of the datasets."""
 
     # initiate Data Library API instance
-    dl = datalibrary.DataLibrary(DATALIB_API_KEY)
+    dl = DataLibrary(DATALIB_API_KEY)
 
     # call the help function to get basic info about usage
     urls = dl.help()
