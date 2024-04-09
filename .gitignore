@@ -162,3 +162,4 @@ cython_debug/
 config.py
 *.csv
 .env
+playground.py
