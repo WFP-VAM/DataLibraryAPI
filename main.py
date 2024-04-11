@@ -55,15 +55,15 @@ def main():
     all_surveys_with_resources, users, survey_list = api_data
 
     # load data into database
-    print("Loading all surveys info to database")
-    load_data(pd.DataFrame(all_surveys_with_resources), 'DL_RawSurveys')
-    print("Loading all surveys info to database")
-
-    users = pd.DataFrame(users)
-    try:
+    
+    try: 
+        print("Loading all surveys info to database")
+        load_data(pd.DataFrame(all_surveys_with_resources), 'DL_RawSurveys')
+        print("Loading all surveys info to database")
+        users = pd.DataFrame(users)
         load_data(pd.DataFrame(users), 'DL_Users')
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"Error loading data: {e}")
 
     # Success!
     print("\nAll data saved!")
