@@ -5,7 +5,7 @@ This is a simple Python tool to get data from the [RAM Data Library API]((https:
 Currently this tools query three API endpoints: 
 - **```user_list```**: Get list of users registered in Data Library
 - **```package_list```**: Get survey codes (YYMM_ISO3_SURVEYTYPE) for all surveys available in the platform
-- ***```current_package_list_with_resources```**: Complete information about surveys in Data Library, including name of survey, survey code, country and uploader
+- **```current_package_list_with_resources```**: Complete information about surveys in Data Library, including name of survey, survey code, country and uploader
 
 For more information on the RAM Data Library API, consult the [documentation](https://docs.ckan.org/en/2.9/api/) 
 
@@ -18,4 +18,5 @@ For more information on the RAM Data Library API, consult the [documentation](ht
 
 >> **Quick tip**
 >> 
->> If you're stuck, use the help() function in the DataLibraryData class for information about 
+>> If you're stuck, use the help() function in the DataLibraryData class for information about usage
+>>
