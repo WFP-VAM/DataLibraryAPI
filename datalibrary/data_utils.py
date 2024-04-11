@@ -1,6 +1,9 @@
 from datetime import date
 import csv
 
+def clean():
+    pass
+
 def normalize_json(data: dict) -> dict:
     """Flatten json"""
     new_data = dict()
@@ -13,7 +16,7 @@ def normalize_json(data: dict) -> dict:
   
     return new_data
 
-def create_csv(data, filename = "output"):
+def export_to_csv(data, filename = "output"):
     """Create CSV file based on data"""
 
     # Get today's date in format YYY_MM_DD

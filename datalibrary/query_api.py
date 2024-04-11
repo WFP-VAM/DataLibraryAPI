@@ -32,6 +32,7 @@ Methods:
         api_key (str): API key for authentication
         """      
         self.api_key = api_key
+        self.session = requests.Session()
     
     def get_response(self, url, limit=None):
         """Send API request.
@@ -48,7 +49,7 @@ Methods:
 
         logger.info(f'Querying {url} with limit {limit}')
 
-        r = requests.get(url, headers=headers, params=params)
+        r = self.session.get(url, headers=headers, params=params)
         if r.status_code == 200:
             response = json.loads(r.content)
             return response
@@ -58,7 +59,7 @@ Methods:
 
     def help(self):
         """Get basic information on the usage of the API."""
-        print(f'This library helps RAM users to query the Data Library API:{BASE_URL}\n')
+        print(f'\n---\n This library helps RAM users to query the Data Library API:{BASE_URL}\n')
         print('You can get information about the following:')
         for k, v in ENDPOINTS.items():
             info = k.replace("_", " ").capitalize()
