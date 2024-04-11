@@ -1,7 +1,10 @@
 import requests
 import json
 import pandas as pd 
+import logging 
 
+
+logger = logging.getLogger(__name__)
 
 BASE_URL = "https://datalib.vam.wfp.org/api/3/"
 ENDPOINTS = {
@@ -11,33 +14,46 @@ ENDPOINTS = {
 }
 
 class DataLibrary:
+    """Class to query WFP Data Library API.
+
+Attributes:
+    api_key (str): API key for authentication
+
+Methods:
+    get_users: Get list of Data Library users
+    get_surveys: Get list of survey codes
+    get_survey_info: Get info on all surveys
+        """
 
     def __init__(self, api_key):
-        """Intitialize Data Library class to query API.
+        """Initialize DataLibrary instance.
 
         Args:
-            api_key (str): API Key to 
-        """
+        api_key (str): API key for authentication
+        """      
         self.api_key = api_key
     
     def get_response(self, url, limit=None):
-        """Utility function to query the Data Library API: https://datalib.vam.wfp.org/api/3".
+        """Send API request.
 
         Args:
-            url (str): WFP Data Library endpoint
-            limit (int, optional):  if given, the list of datasets will be broken into pages of at most limit datasets per page and only one page will be returned at a time (optional). Defaults to None.
-
+            url (str): API endpoint URL
+            limit (int, optional): Max number of results
+        
         Returns:
-            dict: Raw API response
+            dict: API response 
         """
         headers = { 'Authorization': f'{self.api_key}'}
         params = {'limit': limit}
+
+        logger.info(f'Querying {url} with limit {limit}')
+
         r = requests.get(url, headers=headers, params=params)
         if r.status_code == 200:
             response = json.loads(r.content)
             return response
         else:
-            print("Error - status code is %s" % r.status_code)
+            logger.error(f"Error {r.status_code} when querying {url}")
             return None
 
     def help(self):
@@ -65,7 +81,7 @@ class DataLibrary:
         data = response["result"]
         return data
 
-    def get_all_surveys_information(self, limit=None):
+    def get_surveys_with_resources(self, limit=None):
         """Get all surveys with country, type of survey and description"""
         url = BASE_URL + ENDPOINTS['all_surveys_information']
         response = self.get_response(url, limit=limit) 

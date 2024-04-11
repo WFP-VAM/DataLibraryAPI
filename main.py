@@ -1,9 +1,10 @@
 from datalibrary.query_api import DataLibrary
-from datalibrary.export_database import load_table
+from datalibrary.export_database import load_data
 from datalibrary.export_excel import normalize_json, create_csv
 from dotenv import load_dotenv
 import pandas as pd
 import os
+import logging
 
 load_dotenv()  # take environment variables from .env.
 
@@ -29,18 +30,20 @@ def main():
     print(f"There are {total_surveys + 1} surveys and {total_users + 1} active users in Data Library")
 
     # get all information about surveys
-    all_surveys_resources = dl.get_all_surveys_information(limit=total_surveys)
-    all_surveys = [normalize_json(item) for item in all_surveys_resources]
+    all_surveys_with_resources = dl.get_surveys_with_resources(limit=total_surveys)
+    all_surveys_with_resources = [normalize_json(item) for item in all_surveys_with_resources]
 
-    # save data as csv
-    all_data = [all_surveys, users, survey_list]
+
+    # load data into database
+    load_data(pd.DataFrame(all_surveys_with_resources), 'DL_Surveys')
+    load_data(pd.DataFrame(users, 'DL_Users'))
+
+    # export survey list, survey information with resources and user list as csv
+    all_data = [all_surveys_with_resources, users, survey_list]
     all_filenames = ["datalib_all_info", "datalib_users", "survey_list"]
 
     for data, filename in zip(all_data, all_filenames):
         create_csv(data, filename)
-    
-    # save data to database
-    load_table(pd.DataFrame(all_surveys), 'DL_Surveys')
 
     # Success!
     print("\nAll data saved!")
