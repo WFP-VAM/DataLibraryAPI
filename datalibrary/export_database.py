@@ -23,9 +23,9 @@ engine = create_engine(conn_str)
 #     sql_df = pd.read_sql( sql, con=engine) 
 #     print(sql_df.head())
 
-def load_data(df, table_name = 'table', index = False):
+def load_data(data, table_name = 'table', index = False):
     try:
-        sql_df = df.to_sql(name=table_name, con=engine, if_exists='replace', index=index)
+        data.to_sql(name=table_name, con=engine, if_exists='replace', index=index)
         print("Done")
     except Exception as e:
         logger.error(f"Error {e} when populating {table_name}")

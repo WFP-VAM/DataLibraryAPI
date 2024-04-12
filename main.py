@@ -1,11 +1,11 @@
-from datalibrary.query_api import DataLibrary
-from datalibrary.export_database import load_data
 from dotenv import load_dotenv
 from datetime import date
 import pandas as pd
 import os
 import json
 import logging
+from datalibrary.query_api import DataLibrary
+from datalibrary.export_database import load_data
 
 logger = logging.getLogger(__name__)
 
@@ -40,15 +40,13 @@ def get_data_from_api():
     # get all information about surveys
     all_surveys_with_resources = dl.get_surveys_with_resources(limit=total_surveys)
 
-    # with open('all_surveys_with_resources.json', 'w') as f:
-    #     json.dump(all_surveys_with_resources, f)
-    all_surveys_with_resources =  pd.DataFrame.from_records(all_surveys_with_resources)
+    all_surveys_with_resources =  pd.json_normalize(all_surveys_with_resources)
 
     return  (all_surveys_with_resources, users)
 
 def export_data_to_csv(data: tuple):
     # export survey list, survey information with resources and user list as csv
-    all_filenames = ["surveys", "users", "resources"]
+    all_filenames = ["surveys", "resources", "users"]
     folder = "output"
     today = str(date.today()).replace("-", "_")
 
@@ -67,26 +65,24 @@ def load_to_db(data: tuple):
 
 def process_data(data):
     surveys, users = data
-    processed_surveys_with_resources = surveys[['assessment_status', 'collection_method',
+    surveys = surveys[['assessment_status', 'collection_method',
     'creator_user_id', 'data_collector', 'description', 'end_date', 'id',
     'metadata_created', 'metadata_modified', 'month',
-    'name', 'notes', 'num_resources', 'organization_id',
-    'organization_title', 'organization_type',
-    'organization_description',        'organization_created', 
+    'name', 'num_resources', 'organization.id',
+    'organization.title', 'organization.type',
+    'organization.description',        'organization.created', 
         'owner_org',
     'private', 'progress_status', 'start_date', 'state',
     'survey_attributes', 'survey_category', 'survey_type', 'title', 'type',
         'year', 'resources']]
+    
+    surveys.columns = surveys.columns.str.replace('.', '_')
+    surveys = surveys.rename(columns={"id": "survey_id"})
 
-    # processed_surveys_with_resources = processed_surveys_with_resources.rename(columns={"'organization_id": "container_id", 'organization_title': 'container_title', 'organization_type': 'container_type', 'organization_description': 'container_description', 'organization_created': 'container_created' })
 
+    resources = surveys[["resources", "organization_id", "survey_id"]]
 
-    contain_values = processed_surveys_with_resources[processed_surveys_with_resources['assessment_status'].str.contains("'")]
-    print(contain_values)
-
-    resources = processed_surveys_with_resources[["resources", "container_id"]]
-
-    return (processed_surveys_with_resources, resources, users)
+    return (surveys, resources, users)
 
 
 if __name__== "__main__":
@@ -94,9 +90,10 @@ if __name__== "__main__":
 
     # Load processed data to DB
     processed_data = process_data(api_data)
+    export_data_to_csv(api_data)
+
 
     # Export information to CSV
-    export_data_to_csv(processed_data)
     # load_to_db(processed_data)
 
     print("Done")
