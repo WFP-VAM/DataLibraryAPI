@@ -1,20 +1,28 @@
-from datalibrary.query_api import DataLibrary
-from datalibrary.export_database import load_data
-from datalibrary.data_utils import normalize_json, export_to_csv
 from dotenv import load_dotenv
+from datetime import date
 import pandas as pd
 import os
+import json
 import logging
+from api.client import DataLibrary
+from scripts.utils import process_data
+from scripts.export import load_to_db, save_to_excel
+
+logger = logging.getLogger(__name__)
 
 load_dotenv()  # take environment variables from .env.
 
 def get_data_from_api():
+    """
+    Get data from DL api and returns two dataframes.
 
+    This function initializes a DataLibrary API instance, retrieves the survey list and user information from the API, and returns two dataframes - one containing all surveys with resources, and one containing user information.
+
+    Returns:
+        Tuple[pd.DataFrame, pd.DataFrame]: A tuple containing the dataframes for surveys with resources and users.
+    """
     # initiate Data Library API instance
     dl = DataLibrary(os.getenv("DATALIB_API_KEY"))
-
-    # call the help function to get basic info about usage
-    urls = dl.help()
 
     # get survey list in format DATE_ISO3_SURVEYTYPE or DATEISO3SURVEYTYPE
     survey_list = dl.get_survey_list()
@@ -25,52 +33,28 @@ def get_data_from_api():
     users = dl.get_users()
     # get total number of users with an account on Data Library
     total_users = len(users)
+    users = pd.DataFrame(users)
 
     print(f"\n---\n There are {total_surveys + 1} surveys and {total_users + 1} active users in Data Library\n---\n ")
 
     # get all information about surveys
     all_surveys_with_resources = dl.get_surveys_with_resources(limit=total_surveys)
-    all_surveys_with_resources = [normalize_json(item) for item in all_surveys_with_resources]
-    
-    return  (all_surveys_with_resources, users, survey_list)
 
-def load_data_to_db(processed_data):
-    pass
-  # Code to load processed data into database
+    all_surveys_with_resources =  pd.json_normalize(all_surveys_with_resources)
 
-def export_data_to_csv(api_data):
-    # export survey list, survey information with resources and user list as csv
-    all_filenames = ["datalib_all_info", "datalib_users", "survey_list"]
+    return  (all_surveys_with_resources, users)
 
-    for data, filename in zip(api_data, all_filenames):
-        export_to_csv(data, filename)
-
-
-
-def main():
-    """Get user and survey data from Data Library and create CSV files for each of the datasets."""
-    api_data = get_data_from_api()
-    # export_data_to_csv(api_data)
-
-    all_surveys_with_resources, users, survey_list = api_data
-
-    # load data into database
-    
-    try: 
-        print("Loading all surveys info to database")
-        load_data(pd.DataFrame(all_surveys_with_resources), 'DL_RawSurveys')
-        print("Loading all surveys info to database")
-        users = pd.DataFrame(users)
-        load_data(pd.DataFrame(users), 'DL_Users')
-    except Exception as e:
-        print(f"Error loading data: {e}")
-
-    # Success!
-    print("\nAll data saved!")
 
 if __name__== "__main__":
-    main()
+    api_data = get_data_from_api()
+    # Load processed data to DB
+    processed_data = process_data(api_data)
+    save_to_excel(processed_data)
 
+    # Export information to CSV
+    load_to_db(processed_data)
+
+    print("Done")
 
 
 
