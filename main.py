@@ -1,16 +1,12 @@
 from dotenv import load_dotenv
-from datetime import date
 import pandas as pd
 import os
-import json
-import logging
 from api.client import DataLibrary
 from scripts.utils import process_data
 from scripts.export import load_to_db, save_to_excel
 
-logger = logging.getLogger(__name__)
 
-load_dotenv()  # take environment variables from .env.
+load_dotenv()  # dtake environment variables from .env.
 
 def get_data_from_api():
     """
@@ -45,15 +41,12 @@ def get_data_from_api():
     return  (all_surveys_with_resources, users)
 
 
+
 if __name__== "__main__":
     api_data = get_data_from_api()
     # Load processed data to DB
     processed_data = process_data(api_data)
     save_to_excel(processed_data)
-
-    # Export information to CSV
-    load_to_db(processed_data)
-
     print("Done")
 
 
