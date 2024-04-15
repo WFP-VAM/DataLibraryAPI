@@ -164,3 +164,4 @@ config.py
 *.xlsx
 .env
 playground.py
+profile.html
