@@ -1,4 +1,5 @@
 import pandas as pd
+import json
 
 def normalize_json(data: dict) -> dict:
     """Flatten json"""
@@ -44,9 +45,16 @@ def process_data(data: tuple) -> tuple:
 
     resources_df = flatten_response(resources, "resources", "survey_id")
     full_resources = pd.merge(resources, resources_df, on="survey_id")
+    
+    # restricted resources
+    try:
+        full_resources['restricted'] = full_resources['restricted'].apply(json.loads)
+    except TypeError:
+        pass
+
     restricted = pd.json_normalize(full_resources["restricted"])
     full_resources = full_resources.join(restricted)
-    full_resources = full_resources.drop(columns=["resources", "restricted"])
+    full_resources = full_resources.drop(columns=["resources", "restricted",  "restricted-allowed_users", "restricted-level", 'cache_last_updated', 'cache_url', "revision_id"])
 
     return (surveys, full_resources, users)
 

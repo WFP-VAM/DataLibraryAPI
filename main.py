@@ -45,3 +45,4 @@ if __name__== "__main__":
     save_to_excel(processed_data)
     load_to_db(processed_data)
     print("Done")
+
