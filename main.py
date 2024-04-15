@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 import pandas as pd
 import os
-from api.extract import DataLibrary
+from etl.extract import DataLibrary
 from etl.transform import process_data
 from etl.load import load_to_db, save_to_excel
 
@@ -38,11 +38,14 @@ def extract_data(client):
 
     return  (all_surveys_with_resources, users)
 
-if __name__== "__main__":
+def run_etl_process():
     raw_data = extract_data(DataLibrary(os.getenv("DATALIB_API_KEY")))
     # Load processed data to DB
     processed_data = process_data(raw_data)
     save_to_excel(processed_data)
     load_to_db(processed_data)
     print("Done")
+
+if __name__== "__main__":
+    run_etl_process()
 
