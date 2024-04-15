@@ -4,7 +4,6 @@ from sqlalchemy import create_engine
 from dotenv import load_dotenv
 import logging
 from datetime import date
-from pd_to_mssql import to_sql
 
 logger = logging.getLogger(__name__)
 

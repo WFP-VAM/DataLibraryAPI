@@ -29,7 +29,7 @@ def extract_data(client):
     total_users = len(users)
     users = pd.DataFrame(users)
 
-    print(f"\n---\n There are {total_surveys + 1} surveys and {total_users + 1} active users in Data Library\n---\n ")
+    # print(f"\n---\n There are {total_surveys + 1} surveys and {total_users + 1} active users in Data Library\n---\n ")
 
     # get all information about surveys
     all_surveys_with_resources = client.get_surveys_with_resources(limit=total_surveys)
@@ -42,9 +42,9 @@ def run_etl_process():
     raw_data = extract_data(DataLibrary(os.getenv("DATALIB_API_KEY")))
     # Load processed data to DB
     processed_data = process_data(raw_data)
-    save_to_excel(processed_data)
+    # save_to_excel(processed_data)
     load_to_db(processed_data)
-    print("Done")
+    # print("Done")
 
 if __name__== "__main__":
     run_etl_process()
