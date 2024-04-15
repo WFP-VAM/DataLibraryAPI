@@ -1,6 +1,5 @@
 import pandas as pd
 
-
 def normalize_json(data: dict) -> dict:
     """Flatten json"""
     new_data = dict()
@@ -12,6 +11,17 @@ def normalize_json(data: dict) -> dict:
                 new_data[key + "_" + k] = v
   
     return new_data
+
+def flatten_response(df, col: str, df_id: str):
+    flat_list = []
+    for index, row in df.iterrows():
+        for r in row[col]:
+            flat_dict = {df_id : row[df_id]} 
+            flat_dict.update(r)
+            flat_list.append(flat_dict)
+            
+    df1 = pd.DataFrame(flat_list)
+    return df1
 
 def process_data(data: tuple) -> tuple:
     surveys, users = data
@@ -29,8 +39,14 @@ def process_data(data: tuple) -> tuple:
     surveys.columns = surveys.columns.str.replace('.', '_')
     surveys = surveys.rename(columns={"id": "survey_id"})
 
-
     resources = surveys[["resources", "organization_id", "survey_id"]]
     surveys.drop('resources', axis=1)
 
-    return (surveys, resources, users)
+    resources_df = flatten_response(resources, "resources", "survey_id")
+    full_resources = pd.merge(resources, resources_df, on="survey_id")
+    restricted = pd.json_normalize(full_resources["restricted"])
+    full_resources = full_resources.join(restricted)
+    full_resources = full_resources.drop(columns=["resources", "restricted"])
+
+    return (surveys, full_resources, users)
+

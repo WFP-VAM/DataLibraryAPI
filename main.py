@@ -1,18 +1,14 @@
 from dotenv import load_dotenv
-from datetime import date
 import pandas as pd
 import os
-import json
-import logging
-from api.client import DataLibrary
-from scripts.utils import process_data
-from scripts.export import load_to_db, save_to_excel
+from api.extract import DataLibrary
+from etl.transform import process_data
+from etl.load import load_to_db, save_to_excel
 
-logger = logging.getLogger(__name__)
 
 load_dotenv()  # take environment variables from .env.
 
-def get_data_from_api():
+def extract_data(client):
     """
     Get data from DL api and returns two dataframes.
 
@@ -21,16 +17,14 @@ def get_data_from_api():
     Returns:
         Tuple[pd.DataFrame, pd.DataFrame]: A tuple containing the dataframes for surveys with resources and users.
     """
-    # initiate Data Library API instance
-    dl = DataLibrary(os.getenv("DATALIB_API_KEY"))
 
     # get survey list in format DATE_ISO3_SURVEYTYPE or DATEISO3SURVEYTYPE
-    survey_list = dl.get_survey_list()
+    survey_list = client.get_survey_list()
     # # get total number survey present on Data Library
     total_surveys = len(survey_list)
     
     # get information on user
-    users = dl.get_users()
+    users = client.get_users()
     # get total number of users with an account on Data Library
     total_users = len(users)
     users = pd.DataFrame(users)
@@ -38,26 +32,16 @@ def get_data_from_api():
     print(f"\n---\n There are {total_surveys + 1} surveys and {total_users + 1} active users in Data Library\n---\n ")
 
     # get all information about surveys
-    all_surveys_with_resources = dl.get_surveys_with_resources(limit=total_surveys)
+    all_surveys_with_resources = client.get_surveys_with_resources(limit=total_surveys)
 
     all_surveys_with_resources =  pd.json_normalize(all_surveys_with_resources)
 
     return  (all_surveys_with_resources, users)
 
-
 if __name__== "__main__":
-    api_data = get_data_from_api()
+    raw_data = extract_data(DataLibrary(os.getenv("DATALIB_API_KEY")))
     # Load processed data to DB
-    processed_data = process_data(api_data)
+    processed_data = process_data(raw_data)
     save_to_excel(processed_data)
-
-    # Export information to CSV
     load_to_db(processed_data)
-
     print("Done")
-
-
-
-
-
-
