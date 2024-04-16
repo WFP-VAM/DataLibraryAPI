@@ -1,17 +1,6 @@
 import pandas as pd
 import json
 
-def normalize_json(data: dict) -> dict:
-    """Flatten json"""
-    new_data = dict()
-    for key, value in data.items():
-        if not isinstance(value, dict):
-            new_data[key] = value
-        else:
-            for k, v in value.items():
-                new_data[key + "_" + k] = v
-  
-    return new_data
 
 def flatten_response(df, col: str, df_id: str):
     flat_list = []
@@ -24,7 +13,7 @@ def flatten_response(df, col: str, df_id: str):
     df1 = pd.DataFrame(flat_list)
     return df1
 
-def process_data(data: tuple) -> tuple:
+def transform(data: tuple) -> tuple:
     surveys, users = data
     surveys = surveys[['assessment_status', 'collection_method',
     'creator_user_id', 'data_collector', 'description', 'end_date', 'id',

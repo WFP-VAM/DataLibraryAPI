@@ -95,4 +95,48 @@ Methods:
     def __str__(self):
         return f'The API key used in this DataLibraryData is {self.api_key}'
 
+
+def get_survey_data(client):
+  survey_list = client.get_survey_list()
+  total_surveys = len(survey_list)
+
+  all_surveys = client.get_surveys_with_resources(limit=total_surveys) 
+  all_surveys_df = pd.json_normalize(all_surveys)
+
+  return all_surveys_df
+
+
+def get_user_data(client):
+  users = client.get_users()
+  users_df = pd.DataFrame(users)
+
+  return users_df
+
+
+def get_data(client):
+  survey_df = get_survey_data(client)
+  user_df = get_user_data(client)
+
+  return survey_df, user_df
+
+
+
         
+# def get_data(client: Client) -> Tuple[DataFrame, DataFrame]:
+#     # get survey list in format DATE_ISO3_SURVEYTYPE or DATEISO3SURVEYTYPE
+#     survey_list = client.get_survey_list()
+#     # # get total number survey present on Data Library
+#     total_surveys = len(survey_list)
+    
+#     # get information on user
+#     users = client.get_users()
+#     # get total number of users with an account on Data Library
+#     total_users = len(users)
+#     users = pd.DataFrame(users)
+
+#     # get all information about surveys
+#     all_surveys_with_resources = client.get_surveys_with_resources(limit=total_surveys)
+
+#     all_surveys_with_resources =  pd.json_normalize(all_surveys_with_resources)
+
+#     return  (all_surveys_with_resources, users)
