@@ -27,9 +27,9 @@ def main():
     processed_data = transform(dl_api_data)
     save_to_excel(processed_data)
     load_to_db(processed_data)
-    print("Done")
 
 if __name__== "__main__":
     main()
+    print("Done")
     
 

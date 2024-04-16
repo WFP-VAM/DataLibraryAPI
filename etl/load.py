@@ -4,7 +4,6 @@ from sqlalchemy import create_engine
 from dotenv import load_dotenv
 import logging
 from datetime import date
-from pd_to_mssql import to_sql
 
 logger = logging.getLogger(__name__)
 
@@ -23,8 +22,8 @@ class ExcelExportError(Exception):
 
 def load_data(data, table_name = 'table'):
     try:
-        data.to_sql(name=table_name, con=engine, if_exists='replace', index=False)
-        
+        data.to_sql(name=table_name, con=engine, if_exists='replace')
+
         print("Done")
     except Exception as e:
         logger.error(f"Error {e} when populating {table_name}")
