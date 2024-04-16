@@ -165,3 +165,4 @@ config.py
 .env
 playground.py
 profile.html
+*.bak
