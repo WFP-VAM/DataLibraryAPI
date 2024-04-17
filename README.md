@@ -16,10 +16,8 @@ Queries the Data Library API to get:
 - The output CSV files will be saved in the output folder.
 
 ## Requirements
-Python 3.x
-Requests library
-Pandas library
-Python Dotenv library
+- Python 3.x
+
 
 ## Documentation
 For more details on the Data Library API endpoints, see the API documentation.

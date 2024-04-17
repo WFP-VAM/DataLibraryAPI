@@ -89,17 +89,7 @@ Methods:
         response = self.get_response(url, limit=limit) 
         data = response["result"]
         return data
-    
-    def get_member_list(self, limit=None):
-        """Get list of members"""
-        url = BASE_URL + ENDPOINTS['member_list']
-        response = self.get_response(url, limit=limit)
-        try: 
-            data = response["result"]
-            return data
-        except TypeError:
-            print(response)
-
+        
     def __repr__(self):
         return f'DataLibraryData({self.api_key})'
 
@@ -123,11 +113,6 @@ def get_user_data(client):
 
   return users_df
 
-# def get_member_list(client):
-#     member_list = client.get_member_list()
-#     member_list_df = pd.DataFrame(member_list)
-#     return member_list_df
-
 
 def get_data(client):
   survey_df = get_survey_data(client)
@@ -136,12 +121,15 @@ def get_data(client):
   return survey_df, user_df
 
 
+
 if __name__ == "__main__":
     import os
     from dotenv import load_dotenv
 
     load_dotenv() 
 
+
     client = DataLibrary(os.getenv("DATALIB_API_KEY"))
-    members = client.get_member_list()
-    print(members)
+    survey_df, user_df = get_data(client)
+    print(survey_df.head())
+    print(user_df.head())
