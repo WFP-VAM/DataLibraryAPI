@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 import os
 from datalibrary.extract import DataLibrary, get_data
 from datalibrary.transform import transform
-from datalibrary.load import save_to_excel
+from datalibrary.load import save_to_excel, load_to_db
 
 load_dotenv()  # dtake environment variables from .env.
 
@@ -25,6 +25,7 @@ def main():
     # Load processed data to DB
     processed_data = transform(dl_api_data)
     save_to_excel(processed_data)
+    load_to_db(processed_data)
 
 if __name__== "__main__":
     main()
