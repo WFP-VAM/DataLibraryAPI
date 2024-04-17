@@ -10,7 +10,8 @@ BASE_URL = "https://datalib.vam.wfp.org/api/3/"
 ENDPOINTS = {
 'users': 'action/user_list',
 'all_surveys_information': 'action/current_package_list_with_resources',
-'all_surveys_code': 'action/package_list'
+'all_surveys_code': 'action/package_list',
+'member_list': 'action/member_list',
 }
 
 class DataLibrary:
@@ -88,6 +89,16 @@ Methods:
         response = self.get_response(url, limit=limit) 
         data = response["result"]
         return data
+    
+    def get_member_list(self, limit=None):
+        """Get list of members"""
+        url = BASE_URL + ENDPOINTS['member_list']
+        response = self.get_response(url, limit=limit)
+        try: 
+            data = response["result"]
+            return data
+        except TypeError:
+            print(response)
 
     def __repr__(self):
         return f'DataLibraryData({self.api_key})'
@@ -112,6 +123,11 @@ def get_user_data(client):
 
   return users_df
 
+# def get_member_list(client):
+#     member_list = client.get_member_list()
+#     member_list_df = pd.DataFrame(member_list)
+#     return member_list_df
+
 
 def get_data(client):
   survey_df = get_survey_data(client)
@@ -120,23 +136,12 @@ def get_data(client):
   return survey_df, user_df
 
 
+if __name__ == "__main__":
+    import os
+    from dotenv import load_dotenv
 
-        
-# def get_data(client: Client) -> Tuple[DataFrame, DataFrame]:
-#     # get survey list in format DATE_ISO3_SURVEYTYPE or DATEISO3SURVEYTYPE
-#     survey_list = client.get_survey_list()
-#     # # get total number survey present on Data Library
-#     total_surveys = len(survey_list)
-    
-#     # get information on user
-#     users = client.get_users()
-#     # get total number of users with an account on Data Library
-#     total_users = len(users)
-#     users = pd.DataFrame(users)
+    load_dotenv() 
 
-#     # get all information about surveys
-#     all_surveys_with_resources = client.get_surveys_with_resources(limit=total_surveys)
-
-#     all_surveys_with_resources =  pd.json_normalize(all_surveys_with_resources)
-
-#     return  (all_surveys_with_resources, users)
+    client = DataLibrary(os.getenv("DATALIB_API_KEY"))
+    members = client.get_member_list()
+    print(members)

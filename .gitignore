@@ -164,5 +164,6 @@ config.py
 *.xlsx
 .env
 playground.py
+playground.R
 profile.html
 *.bak

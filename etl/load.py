@@ -23,8 +23,6 @@ class ExcelExportError(Exception):
 def load_data(data, table_name = 'table'):
     try:
         data.to_sql(name=table_name, con=engine, if_exists='replace')
-
-        print("Done")
     except Exception as e:
         logger.error(f"Error {e} when populating {table_name}")
 
@@ -52,8 +50,9 @@ def save_to_excel(data: tuple, filenames = ("surveys", "resources", "users")):
             continue
 
 if __name__ == "__main__":
+    pass
 
-    # test_read_sql()  
-    sample_data = {'col1': [1, 2], 'col2': [3, 4]}
-    df = pd.DataFrame(data=sample_data)
-    load_data(df, 'test_table', index=True)
+    # # test_read_sql()  
+    # sample_data = {'col1': [1, 2], 'col2': [3, 4]}
+    # data = pd.DataFrame(data=sample_data)
+    # load_data(data, 'test_table')
