@@ -17,17 +17,12 @@ PASSWORD = os.getenv("DB_PASSWORD")
 conn_str = f'mssql+pyodbc://{USERNAME}:{PASSWORD}@{SERVER}/{DATABASE}?driver=ODBC+Driver+17+for+SQL+Server'
 engine = create_engine(conn_str)
 
-# def test_read_sql(table_name):
-#     sql = """
-#     SELECT * FROM [dbo].table_name
-#     """
-#     sql_df = pd.read_sql( sql, con=engine) 
-#     print(sql_df.head())
+class ExcelExportError(Exception):
+    pass
 
-def load_data(data, table_name = 'table', index = False):
+def load_data(data, table_name = 'table'):
     try:
-        data.to_sql(name=table_name, con=engine, if_exists='replace', index=index)
-        print("Done")
+        data.to_sql(name=table_name, con=engine, if_exists='replace')
     except Exception as e:
         logger.error(f"Error {e} when populating {table_name}")
 
@@ -36,7 +31,7 @@ def load_to_db(data: tuple, table_names = ("DL_Surveys", "DL_Resources", "DL_Use
         for df, table_name in zip(data, table_names):
             logger.info("Loading data to database")
             load_data(df, table_name)
-    except Exception as e:
+    except ExcelExportError as e:
         logger.error(f"Error loading data: {e}")
 
 
@@ -55,8 +50,9 @@ def save_to_excel(data: tuple, filenames = ("surveys", "resources", "users")):
             continue
 
 if __name__ == "__main__":
+    pass
 
-    # test_read_sql()  
-    sample_data = {'col1': [1, 2], 'col2': [3, 4]}
-    df = pd.DataFrame(data=sample_data)
-    load_data(df, 'test_table', index=True)
+    # # test_read_sql()  
+    # sample_data = {'col1': [1, 2], 'col2': [3, 4]}
+    # data = pd.DataFrame(data=sample_data)
+    # load_data(data, 'test_table')

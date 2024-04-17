@@ -1,22 +1,30 @@
-# Data Library API tool
+# Data Library API Tool
+This is a Python tool to query the WFP Data Library API and export the data into CSV files.
 
-This is a simple Python tool to get data from the [RAM Data Library API]((https://datalib.vam.wfp.org)) in CSV format.
+##  Features
+Queries the Data Library API to get:
+- List of users
+- List of survey codes
+- Complete information on all surveys (name, code, country, etc.)
+- Exports the API data into CSV files
+- Provides helper functions to get info on using the API
+## Usage
+- Clone this repo
+- Get an API key from your Data Library account
+- Add the API key to a .env file or pass it directly when instantiating the DataLibrary class
+- Run python main.py to query the API and export CSV files
+- The output CSV files will be saved in the output folder.
 
-Currently this tools query three API endpoints: 
-- **```user_list```**: Get list of users registered in Data Library
-- **```package_list```**: Get survey codes (YYMM_ISO3_SURVEYTYPE) for all surveys available in the platform
-- **```current_package_list_with_resources```**: Complete information about surveys in Data Library, including name of survey, survey code, country and uploader
+## Requirements
+- Python 3.x
 
-For more information on the RAM Data Library API, consult the [documentation](https://docs.ckan.org/en/2.9/api/) 
 
-## How to use it
+## Documentation
+For more details on the Data Library API endpoints, see the API documentation.
 
-1. Make sure you have Python installed on your machine. 
-2. Get an API key from your [Data Library](https://datalib.vam.wfp.org) account
-3. Add your API key to the api_key.py file. Do not forget to add this file to the .gitignore!
-4. Run main.py
+## Contributing
+Contributions to add more API querying/exporting functionality are welcome!
 
->> **Quick tip**
->> 
->> If you're stuck, use the help() function in the DataLibraryData class for information about usage
->>
+## License
+This project is licensed under the MIT License - see the LICENSE file for details.
+
