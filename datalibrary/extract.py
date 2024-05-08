@@ -34,20 +34,22 @@ Methods:
         self.api_key = api_key
         self.session = requests.Session()
     
-    def get_response(self, url, limit=None):
+    def get_response(self, url, params=None):
         """Send API request.
 
         Args:
             url (str): API endpoint URL
-            limit (int, optional): Max number of results
-        
-        Returns:
-            dict: API response 
-        """
-        headers = { 'Authorization': f'{self.api_key}'}
-        params = {'limit': limit}
+            params (dict, optional): Query parameters
 
-        logger.info(f'Querying {url} with limit {limit}')
+        Returns:
+            dict: API response
+        """
+        headers = {'Authorization': f'{self.api_key}'}
+
+        if params is None:
+            params = {}
+
+        logger.info(f'Querying {url} with params {params}')
 
         r = self.session.get(url, headers=headers, params=params)
         if r.status_code == 200:
@@ -88,6 +90,24 @@ Methods:
         response = self.get_response(url, limit=limit) 
         data = response["result"]
         return data
+    
+    def get_member_list(self, id=None, object_type=None, capacity=None, limit=None):
+        """Get list of members of a group.
+
+        Args:
+            id (str, optional): The ID or name of the group.
+            object_type (str, optional): Restrict members to a given type (e.g., 'user' or 'package').
+            capacity (str, optional): Restrict members to a given capacity (e.g., 'member', 'editor', 'admin').
+            limit (int, optional): Maximum number of results to return.
+
+        Returns:
+            list: List of tuples containing (id, type, capacity) for each member.
+        """
+        url = BASE_URL + ENDPOINTS['member_list']
+        params = {'id': id, 'object_type': object_type, 'limit': limit}
+        response = self.get_response(url, params=params)
+        data = response.get("result", [])
+        return data
         
     def __repr__(self):
         return f'DataLibraryData({self.api_key})'
@@ -112,13 +132,16 @@ def get_user_data(client):
 
   return users_df
 
+def get_member_data(client, id=None):
+    members = client.get_member_list(id=id)
+    members_df = pd.DataFrame(members)
+    return members_df
 
 def get_data(client):
   survey_df = get_survey_data(client)
   user_df = get_user_data(client)
 
   return survey_df, user_df
-
 
 
 if __name__ == "__main__":
@@ -129,6 +152,7 @@ if __name__ == "__main__":
 
 
     client = DataLibrary(os.getenv("DATALIB_API_KEY"))
-    survey_df, user_df = get_data(client)
-    print(survey_df.head())
-    print(user_df.head())
+    members = client.get_member_list(id='d91dda9d-26bb-43d1-871c-335b1d4b7089', object_type='user')
+    print(members)
+
+
