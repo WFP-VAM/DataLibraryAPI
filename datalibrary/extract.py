@@ -48,6 +48,8 @@ Methods:
 
         if params is None:
             params = {}
+        elif isinstance(params, int):
+            params = {'limit': params}
 
         logger.info(f'Querying {url} with params {params}')
 
@@ -80,14 +82,14 @@ Methods:
     def get_survey_list(self, limit=None):
         """Get package list"""
         url = BASE_URL + ENDPOINTS['all_surveys_code']
-        response = self.get_response(url, limit=limit) 
+        response = self.get_response(url, params=limit) 
         data = response["result"]
         return data
 
     def get_surveys_with_resources(self, limit=None):
         """Get all surveys with country, type of survey and description"""
         url = BASE_URL + ENDPOINTS['all_surveys_information']
-        response = self.get_response(url, limit=limit) 
+        response = self.get_response(url, params=limit) 
         data = response["result"]
         return data
     
@@ -150,9 +152,11 @@ if __name__ == "__main__":
 
     load_dotenv() 
 
-
     client = DataLibrary(os.getenv("DATALIB_API_KEY"))
-    members = client.get_member_list(id='d91dda9d-26bb-43d1-871c-335b1d4b7089', object_type='user')
-    print(members)
+    # members = client.get_member_list(id='d91dda9d-26bb-43d1-871c-335b1d4b7089', object_type='user')
 
+    # data = get_data(client)
+    # print(f"Data response: {len(data)}")
 
+    member_data = get_member_data(client, id='d91dda9d-26bb-43d1-871c-335b1d4b7089')
+    print(member_data)
