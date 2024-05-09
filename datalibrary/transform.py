@@ -68,7 +68,7 @@ def transform(data: tuple) -> tuple:
     Returns:
     tuple: The transformed data.
     """
-    surveys, users = data
+    surveys, users, members = data
 
     surveys = survey_data_transform(surveys)
 
@@ -98,5 +98,10 @@ def transform(data: tuple) -> tuple:
     # User table transformations 
     users = user_data_transform(users)
 
-    return (surveys, full_resources, users)
+    # Member DF
+    members = members.rename(columns={0: "container_id", 1: "type", 2: "capacity"})
+
+
+
+    return (surveys, full_resources, users, members)
 

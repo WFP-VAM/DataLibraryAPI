@@ -139,11 +139,20 @@ def get_member_data(client, id=None):
     members_df = pd.DataFrame(members)
     return members_df
 
+
 def get_data(client):
   survey_df = get_survey_data(client)
   user_df = get_user_data(client)
+  
+  result = []
+  container_ids = set(survey_df['organization.id'])
+  for container_id in container_ids:
+    container_members = get_member_data(client, id=container_id)
+    if container_members is not None:  # Check if container_members is not None
+        result.append(container_members)
+  member_df = pd.concat(result, ignore_index=True)
 
-  return survey_df, user_df
+  return survey_df, user_df, member_df
 
 
 if __name__ == "__main__":
@@ -155,8 +164,4 @@ if __name__ == "__main__":
     client = DataLibrary(os.getenv("DATALIB_API_KEY"))
     # members = client.get_member_list(id='d91dda9d-26bb-43d1-871c-335b1d4b7089', object_type='user')
 
-    # data = get_data(client)
-    # print(f"Data response: {len(data)}")
-
-    member_data = get_member_data(client, id='d91dda9d-26bb-43d1-871c-335b1d4b7089')
-    print(member_data)
+    survey_df, user_df, member_df = get_data(client)
