@@ -5,15 +5,6 @@ from datalibrary.extract import DataLibrary, get_data
 from datalibrary.transform import transform
 from datalibrary.load import save_to_excel, load_to_db
 
-load_dotenv()  # dtake environment variables from .env.
-
-from dotenv import load_dotenv
-import os
-import argparse
-from datalibrary.extract import DataLibrary, get_data
-from datalibrary.transform import transform
-from datalibrary.load import save_to_excel, load_to_db
-
 load_dotenv()  # take environment variables from .env.
 
 def main():
