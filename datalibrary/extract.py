@@ -148,8 +148,10 @@ def get_data(client):
   container_ids = set(survey_df['organization.id'])
   for container_id in container_ids:
     container_members = get_member_data(client, id=container_id)
-    if container_members is not None:  # Check if container_members is not None
+    if container_members is not None:
+        container_members.insert(3, "container_id", container_id) # Check if container_members is not None
         result.append(container_members)
+        # BUG: container id should be included as column, along with user_id
   member_df = pd.concat(result, ignore_index=True)
 
   return survey_df, user_df, member_df

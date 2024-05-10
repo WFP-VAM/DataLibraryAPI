@@ -56,6 +56,11 @@ def survey_data_transform(df):
     df = df.rename(columns=SURVEY_COLUMNS_RENAMING)
     return df
 
+def member_data_transform(df):
+    df = df.rename(columns={0: "user_id", 1: "type", 2: "capacity"})
+    df = df[df.type.isin(["user"])]
+    df = df[["user_id", "capacity", "container_id"]]
+    return df
 
 
 def transform(data: tuple) -> tuple:
@@ -99,8 +104,7 @@ def transform(data: tuple) -> tuple:
     users = user_data_transform(users)
 
     # Member DF
-    members = members.rename(columns={0: "container_id", 1: "type", 2: "capacity"})
-
+    members = member_data_transform(members)
 
 
     return (surveys, full_resources, users, members)
