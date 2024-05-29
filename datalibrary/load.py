@@ -26,7 +26,7 @@ def load_data(data, table_name = 'table'):
     except Exception as e:
         logger.error(f"Error {e} when populating {table_name}")
 
-def load_to_db(data: tuple, table_names = ("DL_Surveys", "DL_Resources", "DL_Users")):
+def load_to_db(data: tuple, table_names = ("DL_Surveys", "DL_Resources", "DL_Users", "DL_Members")):
     try: 
         for df, table_name in zip(data, table_names):
             logger.info("Loading data to database")
@@ -35,7 +35,7 @@ def load_to_db(data: tuple, table_names = ("DL_Surveys", "DL_Resources", "DL_Use
         logger.error(f"Error loading data: {e}")
 
 
-def save_to_excel(data: tuple, filenames = ("surveys", "resources", "users")):
+def save_to_excel(data: tuple, filenames = ("surveys", "resources", "users", "members")):
     # export survey list, survey information with resources and user list as csv
     folder = "output"
     today = str(date.today()).replace("-", "_")
@@ -51,8 +51,3 @@ def save_to_excel(data: tuple, filenames = ("surveys", "resources", "users")):
 
 if __name__ == "__main__":
     pass
-
-    # # test_read_sql()  
-    # sample_data = {'col1': [1, 2], 'col2': [3, 4]}
-    # data = pd.DataFrame(data=sample_data)
-    # load_data(data, 'test_table')
