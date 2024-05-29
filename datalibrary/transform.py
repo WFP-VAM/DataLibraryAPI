@@ -109,3 +109,5 @@ def transform(data: tuple) -> tuple:
 
     return (surveys, full_resources, users, members)
 
+if __name__ == "__main__":
+    pass

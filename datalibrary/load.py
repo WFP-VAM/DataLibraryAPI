@@ -51,8 +51,3 @@ def save_to_excel(data: tuple, filenames = ("surveys", "resources", "users", "me
 
 if __name__ == "__main__":
     pass
-
-    # # test_read_sql()  
-    # sample_data = {'col1': [1, 2], 'col2': [3, 4]}
-    # data = pd.DataFrame(data=sample_data)
-    # load_data(data, 'test_table')

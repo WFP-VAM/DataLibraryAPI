@@ -158,12 +158,4 @@ def get_data(client):
 
 
 if __name__ == "__main__":
-    import os
-    from dotenv import load_dotenv
-
-    load_dotenv() 
-
-    client = DataLibrary(os.getenv("DATALIB_API_KEY"))
-    # members = client.get_member_list(id='d91dda9d-26bb-43d1-871c-335b1d4b7089', object_type='user')
-
-    survey_df, user_df, member_df = get_data(client)
+    pass
