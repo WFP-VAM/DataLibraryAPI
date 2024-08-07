@@ -167,3 +167,4 @@ playground.py
 playground.R
 profile.html
 *.bak
+output/*

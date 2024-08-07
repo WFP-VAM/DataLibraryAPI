@@ -11,7 +11,7 @@ SURVEY_COLUMNS_RENAMING = {"id": "survey_id", "organization_id": "container_id",
                           "data_collector": "organization", "owner_org": "parent_container_id",
                           "title": "survey_title"}
 
-RESOURCES_COLUMNS_TO_DROP = ["resources", "restricted", "restricted-allowed_users", "restricted-level", "cache_last_updated", "cache_url", "revision_id", "url_type", "state", "resource_type", "mimetype_inner", "hash", "package_id"]
+RESOURCES_COLUMNS_TO_DROP = ["resources", "restricted", "cache_last_updated", "cache_url", "revision_id", "url_type", "state", "resource_type", "mimetype_inner", "hash", "package_id"]
 
 def clean_column_names(df):
     """Rename columns to be more readable"""
@@ -95,7 +95,8 @@ def transform(data: tuple) -> tuple:
 
     # Rename resource columns
     resources_cols_renaming = {
-        "level": "access_level",
+        "restricted-level": "access_level",
+        'restricted-allowed_users': "allowed_users"
     }
     full_resources = full_resources.rename(columns=resources_cols_renaming)
 
