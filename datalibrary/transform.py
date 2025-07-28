@@ -46,7 +46,7 @@ def normalize_restrictions(df):
 
 def user_data_transform(df):
         # Remove unnecessary columns from users table
-    users_columns_to_drop = ["apikey", "display_name", "about", "state", "image_url", "image_display_url"]
+    users_columns_to_drop = ["display_name", "about", "state", "image_url", "image_display_url"]
     df = df.drop(columns=users_columns_to_drop)
     return  df
 
