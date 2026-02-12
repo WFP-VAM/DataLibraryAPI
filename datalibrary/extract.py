@@ -33,6 +33,7 @@ Methods:
         """      
         self.api_key = api_key
         self.session = requests.Session()
+        self._ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:147.0) Gecko/20100101 Firefox/147.0"
     
     def get_response(self, url, params=None):
         """Send API request.
@@ -44,7 +45,7 @@ Methods:
         Returns:
             dict: API response
         """
-        headers = {'Authorization': f'{self.api_key}'}
+        headers = {'Authorization': f'{self.api_key}', 'User-Agent': self._ua}
 
         if params is None:
             params = {}
