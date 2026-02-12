@@ -14,7 +14,7 @@ DATABASE = os.getenv("DB_NAME")
 USERNAME = os.getenv("DB_USERNAME")
 PASSWORD = os.getenv("DB_PASSWORD")
 
-conn_str = f'mssql+pyodbc://{USERNAME}:{PASSWORD}@{SERVER}/{DATABASE}?driver=ODBC+Driver+17+for+SQL+Server'
+conn_str = f'mssql+pyodbc://{USERNAME}:{PASSWORD}@{SERVER}/{DATABASE}?driver=ODBC+Driver+18+for+SQL+Server&Encrypt=yes&TrustServerCertificate=yes'
 engine = create_engine(conn_str)
 
 class ExcelExportError(Exception):
