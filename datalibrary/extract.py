@@ -70,7 +70,7 @@ Methods:
             info = k.replace("_", " ").capitalize()
             print(f'{info} on endpoint {BASE_URL + v}')
 
-        print("\n---\n For documentation visit: http://docs.ckan.org/en/2.9/api/\n---\n")
+        print("\n---\n For documentation visit: http://docs.ckan.org/en/2.11/api/\n---\n")
 
     def get_users(self):
         """Get list of users"""
