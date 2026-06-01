@@ -1,0 +1,14 @@
+services:
+  ipcch-pipeline: #CHANGE THIS
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ipcch-pipeline:latest
+    environment:
+      APP_ENV: ${APP_ENV:-dev}
+      ipc_api_key: ${ipc_api_key:-}
+      # REPORTINGdev_DB_ADMNAME: ${REPORTINGdev_DB_ADMNAME:-}
+      REPORTINGdev_DB_ADMPWD: ${REPORTINGdev_DB_ADMPWD:-}
+      REPORTING_DB_ADMNAME: ${REPORTING_DB_ADMNAME:-}
+      REPORTING_DB_ADMPWD: ${REPORTING_DB_ADMPWD:-}
+    command: ["sh", "-c", "uv run python main.py ${APP_ENV:-dev}"]

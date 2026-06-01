@@ -1,6 +1,6 @@
 [project]
 name = "datalibrary-pipeline"
-version = "0.1.0"
+version = "1.0.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -13,6 +13,8 @@ dependencies = [
     "numpy==1.26.4",
     "pandas==2.2.2",
     "pip==24.0",
+    "polars>=1.41.2",
+    "pyarrow>=24.0.0",
     "pyodbc==5.1.0",
     "pysocks==1.7.1",
     "python-dateutil==2.9.0",
