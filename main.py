@@ -6,7 +6,7 @@ from datalibrary.extract import DataLibrary, get_data
 from datalibrary.transform import transform
 from datalibrary.load import save_to_excel, load_to_db
 
-load_dotenv()  # take environment variables from .env.
+# load_dotenv()  # take environment variables from .env.
 
 def main():
     """
