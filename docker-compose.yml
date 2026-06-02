@@ -8,9 +8,8 @@ services:
     image: data-library-pipeline:latest  # just a name for the built image
 
     environment:
-      APP_ENV: ${APP_ENV:-dev}
+      APP_ENV: ${APP_ENV:-}
 
-      # ✅ Your new required variables
       DATALIB_API_KEY: ${DATALIB_API_KEY:-}
       SERVER: ${SERVER:-}
       DB_NAME: ${DB_NAME:-}
