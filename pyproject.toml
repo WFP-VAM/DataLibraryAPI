@@ -30,3 +30,13 @@ dependencies = [
     "wheel==0.43.0",
     "win-inet-pton==1.1.0",
 ]
+
+[dependency-groups]
+dev = [
+    "black>=26.5.1",
+    "isort>=8.0.1",
+    "pytest>=9.0.3",
+    "python-dotenv>=1.0.1",
+    "ruff>=0.15.15",
+]
+

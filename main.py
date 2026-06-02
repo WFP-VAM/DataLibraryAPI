@@ -1,12 +1,14 @@
-import pdb
-from dotenv import load_dotenv
-import os
 import argparse
+import os
+
+from dotenv import load_dotenv
+
 from datalibrary.extract import DataLibrary, get_data
+from datalibrary.load import load_to_db, save_to_excel
 from datalibrary.transform import transform
-from datalibrary.load import save_to_excel, load_to_db
 
 load_dotenv()  # take environment variables from .env.
+
 
 def main():
     """
@@ -21,9 +23,11 @@ def main():
     processed_data = transform(dl_api_data)
 
     # Parse command-line arguments
-    parser = argparse.ArgumentParser(description='Export Data Library data to CSV or database.')
-    parser.add_argument('--csv', action='store_true', help='Export data to CSV files')
-    parser.add_argument('--db', action='store_true', help='Upload data to a database')
+    parser = argparse.ArgumentParser(
+        description="Export Data Library data to CSV or database."
+    )
+    parser.add_argument("--csv", action="store_true", help="Export data to CSV files")
+    parser.add_argument("--db", action="store_true", help="Upload data to a database")
     args = parser.parse_args()
 
     if args.csv:
@@ -37,7 +41,6 @@ def main():
     if not args.csv and not args.db:
         print("No action specified. Use --csv or --db to export data.")
 
-if __name__== "__main__":
-    main()
-    
 
+if __name__ == "__main__":
+    main()
