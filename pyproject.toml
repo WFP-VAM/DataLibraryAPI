@@ -13,7 +13,7 @@ dependencies = [
     "numpy==1.26.4",
     "pandas==2.2.2",
     "pip==24.0",
-    "pyodbc==5.1.0",
+    "pyodbc>=5.2",
     "pysocks==1.7.1",
     "python-dateutil==2.9.0",
     "python-dotenv==1.0.1",
