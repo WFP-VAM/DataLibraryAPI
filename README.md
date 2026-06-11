@@ -21,7 +21,7 @@ This is a Python CLI tool to query the [WFP Data Library API](https://datalib.va
 - Packages listed in `requirements.txt`
 
 ## Documentation
-For more details on the Data Library API endpoints, see the [API documentation](http://docs.ckan.org/en/2.9/api/).
+For more details on the Data Library API endpoints, see the [API documentation](http://docs.ckan.org/en/2.11/api/).
 
 ## Contributing
 Contributions to add more API querying/exporting functionality are welcome!
