@@ -87,8 +87,11 @@ def normalize_restrictions(df):
         df["restricted"] = df["restricted"].apply(json.loads)
     except TypeError:
         pass
+    
+    restricted = pd.json_normalize(
+        df["restricted"].apply(lambda x: x if isinstance(x, dict) else {})
+    )
 
-    restricted = pd.json_normalize(df["restricted"])
     return restricted
 
 

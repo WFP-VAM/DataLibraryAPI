@@ -4,17 +4,19 @@ from datetime import date
 
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
+from urllib.parse import quote_plus
 
 logger = logging.getLogger(__name__)
 
+
 load_dotenv()  # take environment variables from .env.
 
-SERVER = os.getenv("SERVER")
+DB_HOST = os.getenv("DB_HOST")
 DATABASE = os.getenv("DB_NAME")
 USERNAME = os.getenv("DB_USERNAME")
 PASSWORD = os.getenv("DB_PASSWORD")
 
-conn_str = f"mssql+pyodbc://{USERNAME}:{PASSWORD}@{SERVER}/{DATABASE}?driver=ODBC+Driver+18+for+SQL+Server&Encrypt=yes&TrustServerCertificate=yes"
+conn_str = f"mssql+pyodbc://{USERNAME}:{PASSWORD}@{DB_HOST}/{DATABASE}?driver=ODBC+Driver+18+for+SQL+Server&Encrypt=yes&TrustServerCertificate=yes"
 engine = create_engine(conn_str)
 
 

@@ -1,5 +1,7 @@
 import json
 import logging
+import pdb
+from urllib import response
 
 import pandas as pd
 import requests
@@ -115,8 +117,15 @@ class DataLibrary:
         url = BASE_URL + ENDPOINTS["member_list"]
         params = {"id": id, "object_type": object_type, "limit": limit}
         response = self.get_response(url, params=params)
-        data = response.get("result", [])
-        return data
+        # try:
+        #     data = response.get("result", [])
+
+        if not response or "result" not in response:
+            logger.warning(f"Skipping member_list for id={id} (no response)")
+            return []  # ✅ important fix
+
+        return response["result"]
+
 
     def __repr__(self):
         return f"DataLibraryData({self.api_key})"
@@ -153,16 +162,32 @@ def get_data(client):
     user_df = get_user_data(client)
 
     result = []
-    container_ids = set(survey_df["organization.id"])
+    
+    container_ids = (
+        survey_df["organization.id"]
+        .dropna()        # ✅ removes NaN
+        .unique()
+    )
+
+    result = []
+
+    container_ids = (
+        survey_df["organization.id"]
+        .dropna()
+        .unique()
+    )
+
     for container_id in container_ids:
+        if pd.isna(container_id):
+            continue
+
         container_members = get_member_data(client, id=container_id)
-        if container_members is not None:
-            container_members.insert(
-                3, "container_id", container_id
-            )  # Check if container_members is not None
+
+        if not container_members.empty:
+            container_members["container_id"] = container_id
             result.append(container_members)
-            # BUG: container id should be included as column, along with user_id
-    member_df = pd.concat(result, ignore_index=True)
+
+    member_df = pd.concat(result, ignore_index=True) if result else pd.DataFrame()
 
     return survey_df, user_df, member_df
 

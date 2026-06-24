@@ -11,7 +11,7 @@ services:
       APP_ENV: ${APP_ENV:-}
 
       DATALIB_API_KEY: ${DATALIB_API_KEY:-}
-      SERVER: ${SERVER:-}
+      DB_HOST: ${DB_HOST:-}
       DB_NAME: ${DB_NAME:-}
       DB_USERNAME: ${DB_USERNAME:-}
       DB_PASSWORD: ${DB_PASSWORD:-}
