@@ -7,7 +7,7 @@ from sqlalchemy import create_engine
 from urllib.parse import quote_plus
 
 logger = logging.getLogger(__name__)
-
+from sqlalchemy.engine import URL
 
 load_dotenv()  # take environment variables from .env.
 
@@ -16,9 +16,21 @@ DATABASE = os.getenv("DB_NAME")
 USERNAME = os.getenv("DB_USERNAME")
 PASSWORD = os.getenv("DB_PASSWORD")
 
-conn_str = f"mssql+pyodbc://{USERNAME}:{PASSWORD}@{DB_HOST}/{DATABASE}?driver=ODBC+Driver+18+for+SQL+Server&Encrypt=yes&TrustServerCertificate=yes"
-engine = create_engine(conn_str)
 
+connection_url = URL.create(
+    "mssql+pyodbc",
+    username=USERNAME,
+    password=PASSWORD,
+    host=DB_HOST,
+    database=DATABASE,
+    query={
+        "driver": "ODBC Driver 18 for SQL Server",
+        "Encrypt": "yes",
+        "TrustServerCertificate": "yes",
+    },
+)
+engine = create_engine(connection_url, future = True)
+print(engine)
 
 class ExcelExportError(Exception):
     pass
@@ -26,7 +38,14 @@ class ExcelExportError(Exception):
 
 def load_data(data, table_name="table"):
     try:
-        data.to_sql(name=table_name, con=engine, if_exists="replace")
+         with engine.begin() as conn:
+            data.to_sql(
+                name=table_name,
+                con=engine,
+                if_exists="replace",
+                index=False
+            )
+
     except Exception as e:
         logger.error(f"Error {e} when populating {table_name}")
 
