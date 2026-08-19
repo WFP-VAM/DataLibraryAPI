@@ -1,0 +1,19 @@
+
+services:
+  data-library-pipeline:  # you can rename this to your new pipeline name
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    image: data-library-pipeline:latest  # just a name for the built image
+
+    environment:
+      APP_ENV: ${APP_ENV:-}
+
+      DATALIB_API_KEY: ${DATALIB_API_KEY:-}
+      SERVER: ${SERVER:-}
+      DB_NAME: ${DB_NAME:-}
+      DB_USERNAME: ${DB_USERNAME:-}
+      DB_PASSWORD: ${DB_PASSWORD:-}
+
+    command: ["sh", "-c", "uv run python main.py --db"]
