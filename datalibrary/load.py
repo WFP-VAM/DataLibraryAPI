@@ -29,7 +29,7 @@ connection_url = URL.create(
         "TrustServerCertificate": "yes",
     },
 )
-engine = create_engine(connection_url)
+engine = create_engine(connection_url) #FIXME: executemany would make it faster, but breaks with some data types (dataviz_themes as list?)
 
 class ExcelExportError(Exception):
     pass

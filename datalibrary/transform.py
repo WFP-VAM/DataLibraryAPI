@@ -141,6 +141,12 @@ def transform(data: tuple) -> tuple:
     resources = surveys[["resources", "container_id", "survey_id"]]
     flat_resources = flatten_response(resources, "resources", "survey_id")
 
+
+    #     data["dataviz_themes"] = data["dataviz_themes"].apply(
+    # 4
+    # lambda x: json.dumps(x) if isinstance(x, list) else x)
+    # 5
+
     # Remove unnecessary columns from survey table
     surveys.drop(columns=["resources"], inplace=True)
     full_resources = pd.merge(resources, flat_resources, on="survey_id")
