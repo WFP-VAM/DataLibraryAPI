@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+import pandas as pd
+>>>>>>> d1554b7 (Merge conflict)
 import json
 
 import pandas as pd
@@ -166,4 +170,8 @@ def transform(data: tuple) -> tuple:
 
 
 if __name__ == "__main__":
+<<<<<<< HEAD
     pass
+=======
+    pass
+>>>>>>> d1554b7 (Merge conflict)
