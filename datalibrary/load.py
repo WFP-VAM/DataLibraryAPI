@@ -29,8 +29,7 @@ connection_url = URL.create(
         "TrustServerCertificate": "yes",
     },
 )
-engine = create_engine(connection_url, future = True)
-print(engine)
+engine = create_engine(connection_url)
 
 class ExcelExportError(Exception):
     pass
@@ -38,13 +37,14 @@ class ExcelExportError(Exception):
 
 def load_data(data, table_name="table"):
     try:
-         with engine.begin() as conn:
+        with engine.connect() as conn:
             data.to_sql(
                 name=table_name,
-                con=engine,
+                con=conn,
                 if_exists="replace",
                 index=False
-            )
+                        )
+        print(f"Data loaded to {table_name} successfully")
 
     except Exception as e:
         logger.error(f"Error {e} when populating {table_name}")
