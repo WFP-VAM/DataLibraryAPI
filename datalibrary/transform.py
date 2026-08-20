@@ -87,7 +87,7 @@ def normalize_restrictions(df):
         df["restricted"] = df["restricted"].apply(json.loads)
     except TypeError:
         pass
-    
+
     restricted = pd.json_normalize(
         df["restricted"].apply(lambda x: x if isinstance(x, dict) else {})
     )
@@ -140,7 +140,6 @@ def transform(data: tuple) -> tuple:
     # Flatten resources
     resources = surveys[["resources", "container_id", "survey_id"]]
     flat_resources = flatten_response(resources, "resources", "survey_id")
-
 
     #     data["dataviz_themes"] = data["dataviz_themes"].apply(
     # 4

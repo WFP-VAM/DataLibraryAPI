@@ -1,8 +1,7 @@
 import json
 import logging
-import pdb
-from urllib import response
 
+# import pdb
 import pandas as pd
 import requests
 
@@ -126,7 +125,6 @@ class DataLibrary:
 
         return response["result"]
 
-
     def __repr__(self):
         return f"DataLibraryData({self.api_key})"
 
@@ -162,20 +160,12 @@ def get_data(client):
     user_df = get_user_data(client)
 
     result = []
-    
-    container_ids = (
-        survey_df["organization.id"]
-        .dropna()        # ✅ removes NaN
-        .unique()
-    )
+
+    container_ids = survey_df["organization.id"].dropna().unique()  # ✅ removes NaN
 
     result = []
 
-    container_ids = (
-        survey_df["organization.id"]
-        .dropna()
-        .unique()
-    )
+    container_ids = survey_df["organization.id"].dropna().unique()
 
     for container_id in container_ids:
         if pd.isna(container_id):
@@ -190,6 +180,10 @@ def get_data(client):
     member_df = pd.concat(result, ignore_index=True) if result else pd.DataFrame()
 
     return survey_df, user_df, member_df
+
+
+def get_databridges_data():
+    pass
 
 
 if __name__ == "__main__":

@@ -1,10 +1,10 @@
 import logging
 import os
-from datetime import date
+from datetime import datetime
 
+import pytz
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
-from urllib.parse import quote_plus
 
 logger = logging.getLogger(__name__)
 from sqlalchemy.engine import URL
@@ -29,7 +29,10 @@ connection_url = URL.create(
         "TrustServerCertificate": "yes",
     },
 )
-engine = create_engine(connection_url) #FIXME: executemany would make it faster, but breaks with some data types (dataviz_themes as list?)
+engine = create_engine(
+    connection_url
+)  # FIXME: executemany would make it faster, but breaks with some data types (dataviz_themes as list?)
+
 
 class ExcelExportError(Exception):
     pass
@@ -38,15 +41,10 @@ class ExcelExportError(Exception):
 def load_data(data, table_name="table"):
     try:
         with engine.connect() as conn:
-            data.to_sql(
-                name=table_name,
-                con=conn,
-                if_exists="replace",
-                index=False
-                        )
+            data.to_sql(name=table_name, con=conn, if_exists="replace", index=False)
         print(f"Data loaded to {table_name} successfully")
 
-    except Exception as e:
+    except (ValueError, TypeError) as e:
         logger.error(f"Error {e} when populating {table_name}")
 
 
@@ -64,14 +62,14 @@ def load_to_db(
 def save_to_excel(data: tuple, filenames=("surveys", "resources", "users", "members")):
     # export survey list, survey information with resources and user list as csv
     folder = "output"
-    today = str(date.today()).replace("-", "_")
+    today = datetime.now(pytz.utc).strftime("%Y_%m_%d")
 
     for df, filename in zip(data, filenames):
         path = f"{folder}/{today}_{filename}.csv"
         try:
             df.to_csv(path)
-        except Exception:
-            logger.error(f"Error saving {filename} to excel")
+        except (ValueError, TypeError) as e:
+            logger.error(f"Error saving {filename} to excel: {e}")
             continue
 
 
