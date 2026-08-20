@@ -1,6 +1,6 @@
 [project]
 name = "datalibrary-pipeline"
-version = "1.0.0"
+version = "2.0.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -22,12 +22,14 @@ dependencies = [
     "setuptools==70.0.0",
     "six==1.16.0",
     "sqlalchemy>=2.0",
-    "typing-extensions==4.11.0",
     "tzdata==2024.1",
-    "urllib3==2.2.1",
+    "urllib3",
     "wheel==0.43.0",
     "win-inet-pton==1.1.0",
+    "data-bridges-client",
+    "data-bridges-knots",
 ]
+
 
 [dependency-groups]
 dev = [
@@ -38,3 +40,12 @@ dev = [
     "ruff>=0.15.15",
 ]
 
+
+[[tool.uv.index]]
+name = "wfp-private"
+url = "https://d2i4vvypvg40rv.cloudfront.net/pypi/"
+explicit = true
+
+[tool.uv.sources]
+data-bridges-knots = { index = "wfp-private" }
+data-bridges-client = { index = "wfp-private" }
