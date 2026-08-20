@@ -4,6 +4,11 @@ import logging
 # import pdb
 import pandas as pd
 import requests
+from data_bridges_knots import config_from_env
+from data_bridges_knots.client import DataBridgesKnots
+from dotenv import load_dotenv
+
+load_dotenv()  # Load environment variables from .env file
 
 logger = logging.getLogger(__name__)
 
@@ -182,8 +187,53 @@ def get_data(client):
     return survey_df, user_df, member_df
 
 
-def get_databridges_data():
-    pass
+def get_all_household_surveys(client):
+    pages = []
+    page = 1
+
+    while True:
+        df = client.get_household_surveys_list(page=page)
+
+        if df.empty:
+            break
+
+        pages.append(df)
+        page += 1
+
+    return pd.concat(pages, ignore_index=True)
+
+
+def get_databridges_household_surveys() -> pd.DataFrame:
+    columns = [
+        "surveyID",
+        "xlsFormName",
+        "baseXlsFormName",
+        "countryName",
+        "iso3Alpha3",
+        "surveyModalityName",
+        "surveyCategoryName",
+        "surveySubCategoryName",
+        "surveyPhaseName",
+        "surveyVisibility",
+        "isContinuousMonitoring",
+        "surveyName",
+        "surveyStartDate",
+        "surveyEndDate",
+        "organizations",
+    ]
+
+    client = DataBridgesKnots(config_from_env())
+    surveys = get_all_household_surveys(client)
+
+    return (
+        pd.DataFrame(surveys, columns=columns)
+        .assign(
+            organization_names=lambda df: df["organizations"].apply(
+                lambda orgs: ", ".join(org["name"] for org in orgs)
+            )
+        )
+        .drop(columns="organizations")
+    )
 
 
 if __name__ == "__main__":
