@@ -49,7 +49,7 @@ def load_data(data, table_name="table"):
 
 
 def load_to_db(
-    data: tuple, table_names=("DL_Surveys", "DL_Resources", "DL_Users", "DL_Members")
+    data: tuple, table_names=("DL_Surveys", "DL_Resources", "DL_Users", "DL_Members", "DB_HHSurveys")
 ):
     try:
         for df, table_name in zip(data, table_names):
@@ -59,7 +59,7 @@ def load_to_db(
         logger.error(f"Error loading data: {e}")
 
 
-def save_to_excel(data: tuple, filenames=("surveys", "resources", "users", "members")):
+def save_to_excel(data: tuple, filenames=("surveys", "resources", "users", "members", "household_surveys")):
     # export survey list, survey information with resources and user list as csv
     folder = "output"
     today = datetime.now(pytz.utc).strftime("%Y_%m_%d")

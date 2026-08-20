@@ -235,6 +235,5 @@ def get_databridges_household_surveys() -> pd.DataFrame:
         .drop(columns="organizations")
     )
 
-
 if __name__ == "__main__":
     pass

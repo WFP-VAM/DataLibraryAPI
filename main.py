@@ -3,7 +3,7 @@ import os
 
 from dotenv import load_dotenv
 
-from datalibrary.extract import DataLibrary, get_data
+from datalibrary.extract import DataLibrary, get_data, get_all_household_surveys, get_databridges_household_surveys
 from datalibrary.load import load_to_db, save_to_excel
 from datalibrary.transform import transform
 
@@ -22,6 +22,9 @@ def main():
     dl_api_data = get_data(DataLibrary(os.getenv("DATALIB_API_KEY")))
     processed_data = transform(dl_api_data)
 
+    db_data = get_databridges_household_surveys()
+
+    processed_data.append(db_data)
     # Parse command-line arguments
     parser = argparse.ArgumentParser(
         description="Export Data Library data to CSV or database."

@@ -170,7 +170,7 @@ def transform(data: tuple) -> tuple:
     # Member DF
     members = member_data_transform(members)
 
-    return (surveys, full_resources, users, members)
+    return [surveys, full_resources, users, members]
 
 
 if __name__ == "__main__":
