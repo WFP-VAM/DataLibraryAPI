@@ -1,8 +1,14 @@
 import json
 import logging
 
+# import pdb
 import pandas as pd
 import requests
+from data_bridges_knots import config_from_env
+from data_bridges_knots.client import DataBridgesKnots
+from dotenv import load_dotenv
+
+load_dotenv()  # Load environment variables from .env file
 
 logger = logging.getLogger(__name__)
 
@@ -115,8 +121,14 @@ class DataLibrary:
         url = BASE_URL + ENDPOINTS["member_list"]
         params = {"id": id, "object_type": object_type, "limit": limit}
         response = self.get_response(url, params=params)
-        data = response.get("result", [])
-        return data
+        # try:
+        #     data = response.get("result", [])
+
+        if not response or "result" not in response:
+            logger.warning(f"Skipping member_list for id={id} (no response)")
+            return []  # ✅ important fix
+
+        return response["result"]
 
     def __repr__(self):
         return f"DataLibraryData({self.api_key})"
@@ -153,19 +165,75 @@ def get_data(client):
     user_df = get_user_data(client)
 
     result = []
-    container_ids = set(survey_df["organization.id"])
+
+    container_ids = survey_df["organization.id"].dropna().unique()  # ✅ removes NaN
+
+    result = []
+
+    container_ids = survey_df["organization.id"].dropna().unique()
+
     for container_id in container_ids:
+        if pd.isna(container_id):
+            continue
+
         container_members = get_member_data(client, id=container_id)
-        if container_members is not None:
-            container_members.insert(
-                3, "container_id", container_id
-            )  # Check if container_members is not None
+
+        if not container_members.empty:
+            container_members["container_id"] = container_id
             result.append(container_members)
-            # BUG: container id should be included as column, along with user_id
-    member_df = pd.concat(result, ignore_index=True)
+
+    member_df = pd.concat(result, ignore_index=True) if result else pd.DataFrame()
 
     return survey_df, user_df, member_df
 
+
+def get_all_household_surveys(client):
+    pages = []
+    page = 1
+
+    while True:
+        df = client.get_household_surveys_list(page=page)
+
+        if df.empty:
+            break
+
+        pages.append(df)
+        page += 1
+
+    return pd.concat(pages, ignore_index=True)
+
+
+def get_databridges_household_surveys() -> pd.DataFrame:
+    columns = [
+        "surveyID",
+        "xlsFormName",
+        "baseXlsFormName",
+        "countryName",
+        "iso3Alpha3",
+        "surveyModalityName",
+        "surveyCategoryName",
+        "surveySubCategoryName",
+        "surveyPhaseName",
+        "surveyVisibility",
+        "isContinuousMonitoring",
+        "surveyName",
+        "surveyStartDate",
+        "surveyEndDate",
+        "organizations",
+    ]
+
+    client = DataBridgesKnots(config_from_env())
+    surveys = get_all_household_surveys(client)
+
+    return (
+        pd.DataFrame(surveys, columns=columns)
+        .assign(
+            organization_names=lambda df: df["organizations"].apply(
+                lambda orgs: ", ".join(org["name"] for org in orgs)
+            )
+        )
+        .drop(columns="organizations")
+    )
 
 if __name__ == "__main__":
     pass

@@ -1,13 +1,5 @@
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
->>>>>>> 80d9379
 import pandas as pd
->>>>>>> d1554b7 (Merge conflict)
 import json
-
-import pandas as pd
 
 SURVEY_COLUMNS_SELECTION = [
     "assessment_status",
@@ -54,7 +46,6 @@ RESOURCES_COLUMNS_TO_DROP = [
     "restricted",
     "cache_last_updated",
     "cache_url",
-    "revision_id",
     "url_type",
     "state",
     "resource_type",
@@ -95,7 +86,10 @@ def normalize_restrictions(df):
     except TypeError:
         pass
 
-    restricted = pd.json_normalize(df["restricted"])
+    restricted = pd.json_normalize(
+        df["restricted"].apply(lambda x: x if isinstance(x, dict) else {})
+    )
+
     return restricted
 
 
@@ -145,6 +139,11 @@ def transform(data: tuple) -> tuple:
     resources = surveys[["resources", "container_id", "survey_id"]]
     flat_resources = flatten_response(resources, "resources", "survey_id")
 
+    #     data["dataviz_themes"] = data["dataviz_themes"].apply(
+    # 4
+    # lambda x: json.dumps(x) if isinstance(x, list) else x)
+    # 5
+
     # Remove unnecessary columns from survey table
     surveys.drop(columns=["resources"], inplace=True)
     full_resources = pd.merge(resources, flat_resources, on="survey_id")
@@ -169,16 +168,8 @@ def transform(data: tuple) -> tuple:
     # Member DF
     members = member_data_transform(members)
 
-    return (surveys, full_resources, users, members)
+    return [surveys, full_resources, users, members]
 
 
 if __name__ == "__main__":
-<<<<<<< HEAD
     pass
-=======
-<<<<<<< HEAD
-    pass
-=======
-    pass
->>>>>>> d1554b7 (Merge conflict)
->>>>>>> 80d9379
